@@ -33,6 +33,7 @@
                     <th class="text-center">Nama Kasir</th>
                     <th class="text-center">Waktu Penjualan</th>
                     <th class="text-center">Total Harga</th>
+                    <th class="text-center">Jenis Bayar</th>
                     <th class="text-center">Opsi</th>
                     
                 </tr>
@@ -50,6 +51,15 @@
                         </td>
                         <td class="text-center"><?= date('d-m-Y H:i:s ',strtotime("$data->paid_at")); ?></td>
                         <td class="text-center">Rp. <?= buatRupiah($data->total_harga) ?></td>
+                        <td class="text-center">
+                          <?php 
+                          if($data->jenis_bayar == 1) {
+                            echo 'Tunai';
+                          } elseif($data->jenis_bayar == 2) {
+                            echo 'QRIS';
+                          }
+                          ?>
+                        </td>
                         <td class="text-center">
                         <a href="<?=base_url('transaksi/show/').$data->id_transaksi ?>" class="btn btn-sm btn-info ">&nbsp;<i class="fa fa-print"></i></a>
                         </td>

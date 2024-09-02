@@ -207,14 +207,16 @@ class Transaksi extends CI_Controller {
 		$this->form_validation->set_rules('data-3', '-', 'required|trim');
 			
 		if ($this->form_validation->run() == true) {
-			$data1 = $this->input->post('data-1', true);
-			$data2 = $this->input->post('data-2', true);
-			$data3 = $this->input->post('data-3', true);
+			$data1 		 = $this->input->post('data-1', true);
+			$data2 		 = $this->input->post('data-2', true);
+			$data3 		 = $this->input->post('data-3', true);
+			$jenis_bayar = $this->input->post('payment-method', true);
 			$now = date("Y-m-d H:i:s");
 
 			$this->db->set('total_tunai', $data2);
 			$this->db->set('total_harga', $data1);
 			$this->db->set('total_kembali', $data3);
+			$this->db->set('jenis_bayar', $jenis_bayar);
 			$this->db->set('is_paid', 1);
 			$this->db->set('paid_at', $now);
 			$this->db->where('id_transaksi', $id);
