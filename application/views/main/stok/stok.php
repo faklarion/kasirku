@@ -1,19 +1,43 @@
-
+<?php 
+function tgl_indo($tanggal){
+	$bulan = array (
+		1 =>   'Januari',
+		'Februari',
+		'Maret',
+		'April',
+		'Mei',
+		'Juni',
+		'Juli',
+		'Agustus',
+		'September',
+		'Oktober',
+		'November',
+		'Desember'
+	);
+	$pecahkan = explode('-', $tanggal);
+	
+	// variabel pecahkan 0 = tanggal
+	// variabel pecahkan 1 = bulan
+	// variabel pecahkan 2 = tahun
+ 
+	return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+}
+?>
 
 <html>
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="main.css">
-	<title>Produk</title>
+	<title>Stok Harian</title>
 </head>
 <body>
 <div class="app-title">
 	<div>
-		<h1><i class="fa fa-cube"></i> Produk</h1>
+		<h1><i class="fa fa-cube"></i> Stok Harian</h1>
 	</div>
 	<ul class="app-breadcrumb breadcrumb">
 		<li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-		<li class="breadcrumb-item"><a href="javascript:void(0)">Produk</a></li>
+		<li class="breadcrumb-item"><a href="javascript:void(0)">Stok Harian</a></li>
 	</ul>
 </div>
 
@@ -24,8 +48,7 @@
 			
 					<div class="col-md-12 col-md-offset-3">
 						<div class="pull-right">
-						    <!-- <a href="<?=base_url('jenis_produk')?>"  class="btn btn-warning"><i class="fa fa-fw fa-lg fa-eye"></i> Jenis Produk</a> -->
-						    <button class="btn btn-primary add_p"><i class="fa fa-fw fa-lg fa-plus"></i> Produk</button>
+						    <button class="btn btn-primary add_p"><i class="fa fa-fw fa-lg fa-plus"></i> Stok Harian</button>
                         </div><br><br><br>
 						
 					</div>
@@ -38,48 +61,30 @@
         <table class="table table-hover table-bordered" id="tabelKu" width="100%">
             <thead>
                 <tr><th class="text-center">No.</th>
-                    <th class="text-center">-</th>
-                    <th class="text-center">Nama</th>
-                    <!-- <th class="text-center">Jenis</th> -->
-                    <th class="text-center">Harga Jual</th>
+                    <th class="text-center">Produk</th>
+                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Stok Harian</th>
+                    <th class="text-center">Total</th>
                     <th class="text-center">Opsi</th>
                     
                 </tr>
             </thead>
             <tbody>
                 <?php 
-                $noUrut = 0;
-                $sql = $this->db->query("SELECT tbl_product.*, tbl_jenis_product.* FROM tbl_product 
-                        LEFT JOIN tbl_jenis_product ON tbl_product.id_jenis_product = tbl_jenis_product.id_jenis_product 
-                        ORDER BY tbl_product.id_product DESC");
-
-					foreach($sql->result_array() as $data){
-                    $file = file_exists('./assets/images/products/'.$data['foto']);
-
-                        $noUrut++?>
-                    <tr><td class="text-center"><?= $noUrut?>.</td>
+                        $noUrut = 0;
+					    foreach($data_stok as $data){
+                        $noUrut++
+                ?>
+                    <tr>
+                        <td class="text-center"><?= $noUrut?>.</td>
+                        <td class="text-center"><?= $data->nama_product ?></td>
+                        <td class="text-center"><?= tgl_indo($data->tanggal) ?></td>
+                        <td class="text-center"><?= $data->stok ?></td>
+                        <td class="text-center">Rp. <?= buatRupiah($data->stok * $data->harga_jual) ?></td>
                         <td class="text-center">
-                        <?php if($file && !empty($data['foto'])): ?>
-                            <a id="show_foto" data-toggle="modal" data-target="#img" href="javascript:void(0)" data-id="<?= $data['id_product']; ?>" data-foto="<?= $data['foto']; ?>">
-                                <img class="img-responsive user-img-data img-thumbnail" alt="<?= $data['foto']; ?>" src="<?= './assets/images/products/'.$data['foto']; ?>" />
-                            </a>
-						<?php else: ?>
-											<i class="fa fa-cube fa-fw"></i>
-						<?php endif; ?></td>
-                        <td><?= $data['nama_product'] ?></td>
-                        <!-- <td class="text-center"><?= $data['nama_jenis_product'] ?></td> -->
-                        <td class="text-center">Rp. <?= buatRupiah($data['harga_jual']) ?></td>
-                        <td class="text-center">
-                        <!-- <a href="<?= base_url('produk/') . $data['id_product'] ?>" class="btn btn-sm btn-info">&nbsp;<i class="fa fa-eye"></i></a> -->
-
-
-                        <a class="btn btn-warning btn-sm edit_p" id="<?=$data['id_product']?>">&nbsp;<i class="fa fa-pencil" ></i></a>
-                        
-                        
-						<a class="btn btn-sm btn-danger hapusModal" id="hapusModal__<?=$data['id_product']?>"  data-toggle="modal" data-target="#deleteModal">&nbsp;<i class="fa fa-trash"></i></a>
-						
-                        </td>
-                        
+                            <!-- <a class="btn btn-warning btn-sm edit_p" id="<?=$data->id_stok ?>">&nbsp;<i class="fa fa-pencil" ></i></a> -->
+                            <a class="btn btn-sm btn-danger hapusModal" id="hapusModal__<?=$data->id_stok ?>"  data-toggle="modal" data-target="#deleteModal">&nbsp;<i class="fa fa-trash"></i></a>
+						</td>
                     </tr>
 
                 <?php } ?>
@@ -193,7 +198,7 @@ $(document).ready(function(){
 		var hapuslink = document.getElementById('hapusLink');
 
         if(id_baris){
-			hapuslink.href = "<?= base_url('main/hapus_produk/')?>"+id_baris;
+			hapuslink.href = "<?= base_url('stok/hapus_stok/')?>"+id_baris;
         }
     })
 })
@@ -202,7 +207,7 @@ $(document).ready(function(){
 //form input
 $(document).on('click', '.add_p', function(){
   $.ajax({
-   url:"<?= base_url('produk/add')?>",
+   url:"<?= base_url('stok/add')?>",
    success:function(data){
     $('#form_add').html(data);
     $('#addModal').modal('show');
@@ -213,7 +218,7 @@ $(document).on('click', '.add_p', function(){
  $(document).on('click', '.edit_p', function(){
   var idnya = $(this).attr("id");
   $.ajax({
-   url:"<?= base_url('produk/edit')?>",
+   url:"<?= base_url('stok/edit')?>",
    method:"POST",
    data:{idnya:idnya},
    success:function(data){

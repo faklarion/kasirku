@@ -1,4 +1,7 @@
-<?php $page = $this->uri->segment(1);?>
+<?php 
+	$page = $this->uri->segment(1);
+	$page_cart = $this->uri->segment(2);
+?>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,12 +54,14 @@
 			
 			<?php if($dataku['is_admin'] == 1):?>
 			<h6 class="title-menu">Menu Admin</h6>
-			<li><a class="app-menu__item <?php if($page=='pegawai'){echo "active";} ?>" href="<?=base_url('pegawai')?>"><i class="app-menu__icon fa fa-users"></i><span class="app-menu__label">Pegawai</span></a></li>
+			<li><a class="app-menu__item <?php if($page=='pegawai'){echo "active";} ?>" href="<?=base_url('pegawai')?>"><i class="app-menu__icon fa fa-users"></i><span class="app-menu__label">Cabang/Pegawai</span></a></li>
 			<?php endif;?>
 
 			<h6 class="title-menu">Menu Kasir</h6>
 			<li><a class="app-menu__item <?php if($page=='produk'){echo "active";} ?>" href="<?=base_url('produk')?>"><i class="app-menu__icon fa fa-cube"></i><span class="app-menu__label">Produk</span></a></li>
-			<li><a class="app-menu__item <?php if($page=='transaksi'){echo "active";} ?>" href="<?=base_url('transaksi')?>"><i class="app-menu__icon fa fa-cart-arrow-down"></i><span class="app-menu__label">Transaksi</span></a></li>
+			<li><a class="app-menu__item <?php if($page=='stok'){echo "active";} ?>" href="<?=base_url('stok')?>"><i class="app-menu__icon fa fa-archive"></i><span class="app-menu__label">Stok</span></a></li>
+			<li><a class="app-menu__item <?php if($page_cart =='jual'){echo "active";} ?>" href="<?=base_url('jual')?>"><i class="app-menu__icon fa fa-cart-arrow-down"></i><span class="app-menu__label">Transaksi</span></a></li>
+			<li><a class="app-menu__item <?php if($page=='transaksi'){echo "active";} ?>" href="<?=base_url('transaksi')?>"><i class="app-menu__icon fa fa-table"></i><span class="app-menu__label">Laporan Transaksi</span></a></li>
 			<li><a class="app-menu__item"  data-toggle="modal" data-target="#logoutModal"  href="<?=base_url('logout')?>"><i class="app-menu__icon fa fa-sign-out"></i><span class="app-menu__label">Logout</span></a></li>
 		</ul>
 	</aside>

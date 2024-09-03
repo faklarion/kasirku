@@ -52,11 +52,36 @@ class Modal extends CI_Controller {
 		}
 	}
 
+
 	public function edit_produk()
 	{
 		if($this->input->is_ajax_request())
 		{
 			$this->load->view('main/produk/edit_product');
+		}
+		else
+		{
+			show_404();
+		}
+	}
+
+	public function add_stok()
+	{
+		if($this->input->is_ajax_request())
+		{
+			$this->load->view('main/stok/add_stok');
+		}
+		else
+		{
+			show_404();
+		}
+	}
+
+	public function edit_stok()
+	{
+		if($this->input->is_ajax_request())
+		{
+			$this->load->view('main/stok/edit_stok');
 		}
 		else
 		{

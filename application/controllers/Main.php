@@ -221,7 +221,7 @@ class Main extends CI_Controller {
 
     //$this->form_validation->set_rules('id_jenis_product', 'ID Jenis Product', 'required|numeric');
     $this->form_validation->set_rules('nama_product', 'Nama Product', 'required');
-    $this->form_validation->set_rules('stok', 'Stok', 'required|numeric');
+    //$this->form_validation->set_rules('stok', 'Stok', 'required|numeric');
     //$this->form_validation->set_rules('harga_beli', 'Harga Beli', 'required|numeric');
     $this->form_validation->set_rules('harga_jual', 'Harga Jual', 'required|numeric');
 
@@ -230,7 +230,7 @@ class Main extends CI_Controller {
     } else {
         //$id_jenis_product = $this->input->post('id_jenis_product');
         $nama_product = $this->input->post('nama_product');
-        $stok = $this->input->post('stok');
+        //$stok = $this->input->post('stok');
         //$harga_beli = $this->input->post('harga_beli');
         $harga_jual = $this->input->post('harga_jual');
         $gambar = "";
@@ -239,8 +239,8 @@ class Main extends CI_Controller {
 			$errors[] = 'Tidak mendukung spesial karakter.';
 		}
 
-        if (!is_numeric($stok) || !is_numeric($harga_jual)) {
-            $errors[] = "Stok, harga beli, dan harga jual harus berupa angka. Silakan coba lagi.";
+        if (!is_numeric($harga_jual)) {
+            $errors[] = "harga jual harus berupa angka. Silakan coba lagi.";
         } else {
             $dir = './assets/images/products/';
 
@@ -270,7 +270,7 @@ class Main extends CI_Controller {
                 $data = array(
                     //'id_jenis_product' => $id_jenis_product,
                     'nama_product' => $nama_product,
-                    'stok' => $stok,
+                    //'stok' => $stok,
                     //'harga_beli' => $harga_beli,
                     'harga_jual' => $harga_jual,
                     'foto' => $gambar
@@ -292,7 +292,7 @@ class Main extends CI_Controller {
         $file_before = $this->input->post('file_before');
         //$id_jenis_product = $this->input->post('id_jenis_product');
         $nama_product = $this->input->post('nama_product');
-        $stok = $this->input->post('stok');
+        //$stok = $this->input->post('stok');
         //$harga_beli = $this->input->post('harga_beli');
         $harga_jual = $this->input->post('harga_jual');
         $gambar = "";
@@ -301,8 +301,8 @@ class Main extends CI_Controller {
 			$errors[] = 'Tidak mendukung spesial karakter.';
 		}
 
-        if (!is_numeric($stok) || !is_numeric($harga_jual)) {
-            $errors[] = "Stok, harga beli, dan harga jual harus berupa angka. Silakan coba lagi.";
+        if (!is_numeric($harga_jual)) {
+            $errors[] = "harga jual harus berupa angka. Silakan coba lagi.";
         }
 
         $dir = "./assets/images/products/";
@@ -337,7 +337,7 @@ class Main extends CI_Controller {
             $data = array(
                 //'id_jenis_product' => $id_jenis_product,
                 'nama_product' => $nama_product,
-                'stok' => $stok,
+                //'stok' => $stok,
                 //'harga_beli' => $harga_beli,
                 'harga_jual' => $harga_jual,
                 'foto' => $gambar

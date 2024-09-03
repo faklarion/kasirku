@@ -11,7 +11,15 @@ class Product_model extends CI_Model {
 	public function get_all_products() {
         $this->db->select('*');
         $this->db->from('tbl_product');
-        $this->db->join('tbl_jenis_product', 'tbl_jenis_product.id_jenis_product = tbl_product.id_jenis_product', 'left');
+        //$this->db->join('tbl_jenis_product', 'tbl_jenis_product.id_jenis_product = tbl_product.id_jenis_product', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_all_stok() {
+        $this->db->select('*');
+        $this->db->from('tbl_stok');
+        $this->db->join('tbl_product', 'tbl_product.id_product = tbl_stok.id_product');
         $query = $this->db->get();
         return $query->result();
     }
@@ -41,6 +49,12 @@ class Product_model extends CI_Model {
         }
         $this->db->where('id_product', $del_id);
         $this->db->delete('tbl_product');
+        return true;
+    }
+
+    public function delete_stok($del_id) {
+        $this->db->where('id_stok', $del_id);
+        $this->db->delete('tbl_stok');
         return true;
     }
 

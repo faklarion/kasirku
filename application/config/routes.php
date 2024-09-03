@@ -60,11 +60,17 @@ $route['logout'] = 'auth/logout';
 
 $route['dashboard'] = 'main/index';
 
+$route['jual'] = 'transaksi/cart_index';
+
 
 $route['pegawai'] = 'main/pegawai';
 $route['pegawai/add'] = 'modal/add_pegawai';
 $route['pegawai/edit'] = 'modal/edit_pegawai';
 
+$route['stok'] = 'stok';
+$route['stok/add'] = 'modal/add_stok';
+$route['stok/edit'] = 'modal/edit_stok';
+$route['stok/(:num)'] = 'main/show_stok/$1';
 
 $route['produk'] = 'main/produk';
 $route['produk/add'] = 'modal/add_produk';
