@@ -65,6 +65,18 @@ class Modal extends CI_Controller {
 		}
 	}
 
+	public function add_laporan()
+	{
+		if($this->input->is_ajax_request())
+		{
+			$this->load->view('main/stok/add_laporan');
+		}
+		else
+		{
+			show_404();
+		}
+	}
+
 	public function add_stok()
 	{
 		if($this->input->is_ajax_request())

@@ -19,8 +19,10 @@
 	<link rel="stylesheet" type="text/css" href="<?=base_url('assets/')?>css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="<?=base_url('assets/')?>css/sweetalert2.css">
 
-	<script src="<?=base_url('assets/')?>js/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css">
 	
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="<?=base_url('assets/')?>js/dropify.min.js"></script>
 	<script src="<?=base_url('assets/')?>js/popper.min.js"></script>
 	<script src="<?=base_url('assets/')?>js/bootstrap.min.js"></script>
@@ -55,14 +57,17 @@
 			<?php if($dataku['is_admin'] == 1):?>
 			<h6 class="title-menu">Menu Admin</h6>
 			<li><a class="app-menu__item <?php if($page=='pegawai'){echo "active";} ?>" href="<?=base_url('pegawai')?>"><i class="app-menu__icon fa fa-users"></i><span class="app-menu__label">Cabang/Pegawai</span></a></li>
-			<?php endif;?>
-
-			<h6 class="title-menu">Menu Kasir</h6>
 			<li><a class="app-menu__item <?php if($page=='produk'){echo "active";} ?>" href="<?=base_url('produk')?>"><i class="app-menu__icon fa fa-cube"></i><span class="app-menu__label">Produk</span></a></li>
 			<li><a class="app-menu__item <?php if($page=='stok'){echo "active";} ?>" href="<?=base_url('stok')?>"><i class="app-menu__icon fa fa-archive"></i><span class="app-menu__label">Stok</span></a></li>
-			<li><a class="app-menu__item <?php if($page_cart =='jual'){echo "active";} ?>" href="<?=base_url('jual')?>"><i class="app-menu__icon fa fa-cart-arrow-down"></i><span class="app-menu__label">Transaksi</span></a></li>
+			<?php endif;?>
+			<?php if($dataku['is_admin'] == 0):?>
+			<h6 class="title-menu">Menu Kasir</h6>
+			<li><a class="app-menu__item <?php if($page =='jual'){echo "active";} ?>" href="<?=base_url('jual')?>"><i class="app-menu__icon fa fa-cart-arrow-down"></i><span class="app-menu__label">Transaksi</span></a></li>
+			<?php endif; ?>
 			<li><a class="app-menu__item <?php if($page=='transaksi'){echo "active";} ?>" href="<?=base_url('transaksi')?>"><i class="app-menu__icon fa fa-table"></i><span class="app-menu__label">Laporan Transaksi</span></a></li>
+			<li><a class="app-menu__item <?php if($page=='laporan'){echo "active";} ?>" href="<?=base_url('laporan')?>"><i class="app-menu__icon fa fa-table"></i><span class="app-menu__label">Laporan Penjualan</span></a></li>
 			<li><a class="app-menu__item"  data-toggle="modal" data-target="#logoutModal"  href="<?=base_url('logout')?>"><i class="app-menu__icon fa fa-sign-out"></i><span class="app-menu__label">Logout</span></a></li>
+
 		</ul>
 	</aside>
 <div>

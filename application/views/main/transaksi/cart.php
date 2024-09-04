@@ -110,7 +110,10 @@
             <div class="col-md-12">
                 <div class="product-gallery">
                     <?php
-                    $lists = $this->db->query("SELECT * FROM tbl_product WHERE stok > 0 ORDER BY nama_product ASC");
+                    $lists = $this->db->query("SELECT * FROM tbl_stok
+                    JOIN tbl_product ON tbl_product.id_product = tbl_stok.id_product
+                    WHERE stok > 0
+                    AND tanggal = CURRENT_DATE");
                     $products = $lists->result();
                     foreach ($products as $product) { ?>
                         <div class="product-card">
@@ -153,10 +156,11 @@
                         <?php
                         $total = 0;
 
-                        $d = $this->db->query("SELECT tbl_cart.*, tbl_product.*
-                FROM tbl_cart 
-                JOIN tbl_product ON tbl_cart.id_product = tbl_product.id_product 
-                WHERE tbl_cart.id_transaksi = '$da->id_transaksi'");
+                        $d = $this->db->query("SELECT tbl_cart.*, tbl_product.*, tbl_stok.*
+                                                FROM tbl_cart 
+                                                JOIN tbl_product ON tbl_cart.id_product = tbl_product.id_product 
+                                                JOIN tbl_stok ON tbl_product.id_product = tbl_stok.id_product
+                                                WHERE tbl_cart.id_transaksi = '$da->id_transaksi'");
 
                         if ($d->num_rows() > 0) {
                             foreach ($d->result() as $i) { ?>

@@ -60,8 +60,10 @@ $route['logout'] = 'auth/logout';
 
 $route['dashboard'] = 'main/index';
 
-$route['jual'] = 'transaksi/cart_index';
+$route['laporan'] = 'laporan/index';
+$route['laporan/add'] = 'modal/add_laporan';
 
+$route['jual'] = 'transaksi/cart_index';
 
 $route['pegawai'] = 'main/pegawai';
 $route['pegawai/add'] = 'modal/add_pegawai';

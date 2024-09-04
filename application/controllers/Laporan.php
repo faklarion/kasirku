@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stok extends CI_Controller {
+class Laporan extends CI_Controller {
 	public function __construct()
 	{	
 		parent::__construct();
@@ -29,12 +29,12 @@ class Stok extends CI_Controller {
 		
 		$data['data_stok'] = $this->Product_model->get_all_stok();
 		// var_dump($data['chart_labels']);
-		$this->load->view('main/stok/stok', $data);
+		$this->load->view('main/stok/laporan', $data);
 
 		$this->load->view('main/extend/footer');
 	}
 
-	public function add_stok()
+    public function add_laporan()
 	{
     
     $this->form_validation->set_rules('id_product', 'Nama Product', 'required');
@@ -50,39 +50,24 @@ class Stok extends CI_Controller {
         if (!is_numeric($stok)) {
             $errors[] = "Stokharus berupa angka. Silakan coba lagi.";
         } else {
-			if ($this->Product_model->check_duplicate_stok($tanggal, $id_product)) {
-				$this->session->set_flashdata('error', 'Barang di tanggal hari ini sudah ada !');
-				redirect('stok');
+			if ($this->Product_model->check_duplicate_laporan($tanggal, $id_product)) {
+				$this->session->set_flashdata('error', 'Laporan Barang di tanggal hari ini sudah ada !');
+				redirect('laporan');
 			} else {
                 $data = array(
                     'id_product' => $id_product,
-                    'stok' => $stok,
-					'tanggal' => date('Y-m-d'),
+                    'stok_terjual' => $stok,
+					'tanggal_terjual' => date('Y-m-d'),
                 );
-                $this->db->insert('tbl_stok', $data);
-				$success = array("Data Stok behasil di masukkan !");
+                $this->db->insert('tbl_penjualan', $data);
+				$success = array("Data Laporan behasil di masukkan !");
 				$this->session->set_flashdata('error', display_success($success));
             }
 		}
         }
 
-	redirect('stok');
+	redirect('laporan');
 
-	}
-
-	public function hapus_stok($id_stok)
-	{
-		$del_id = $id_stok;
-			$delete = $this->Product_model->delete_stok($del_id);
-			if($delete){
-				$success[] = "Data stok berhasil dihapus.";
-				$this->session->set_flashdata('error', display_success($success));
-                redirect('stok');
-			} else {
-				$errors[] = "Data stok gagal dihapus.";
-				$this->session->set_flashdata('error', display_errors($errors));
-                redirect('stok');
-			}
 	}
 	
 }

@@ -28,12 +28,12 @@ function tgl_indo($tanggal){
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="main.css">
-	<title>Stok Harian</title>
+	<title>Laporan Penjualan</title>
 </head>
 <body>
 <div class="app-title">
 	<div>
-		<h1><i class="fa fa-cube"></i> Stok Harian</h1>
+		<h1><i class="fa fa-cube"></i> Laporan Penjualan</h1>
 	</div>
 	<ul class="app-breadcrumb breadcrumb">
 		<li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -48,7 +48,7 @@ function tgl_indo($tanggal){
 			
 					<div class="col-md-12 col-md-offset-3">
 						<div class="pull-right">
-						    <button class="btn btn-primary add_p"><i class="fa fa-fw fa-lg fa-plus"></i> Stok Harian</button>
+						    <button class="btn btn-primary add_p"><i class="fa fa-fw fa-lg fa-plus"></i> Laporan Harian</button>
                         </div><br><br><br>
 						
 					</div>
@@ -60,42 +60,45 @@ function tgl_indo($tanggal){
 		<div class="table-responsive">
         <table class="table table-hover table-bordered" id="tabelKu" width="100%">
             <thead>
-                <tr><th class="text-center">No.</th>
-                    <th class="text-center">Cabang</th>
-                    <th class="text-center">Produk</th>
-                    <th class="text-center">Tanggal</th>
-                    <th class="text-center">Stok Harian</th>
-                    <th class="text-center">Total</th>
-                    <th class="text-center">Opsi</th>
-                    
+                <tr>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Tanggal Penjualan</th>
+                    <th class="text-center">Nama Product</th>
+                    <th class="text-center">Stok Terjual</th>
+                    <th class="text-center">Total Penjualan</th>
+                    <!-- <th class="text-center">Opsi</th> -->
                 </tr>
             </thead>
             <tbody>
                 <?php 
-                        $total = 0;
                         $noUrut = 0;
-					    foreach($data_stok as $data){
+                        $total = 0;
+					    $sql = $this->db->query("SELECT * FROM tbl_penjualan
+                        LEFT JOIN tbl_product ON tbl_product.id_product = tbl_penjualan.id_product
+                        ");
+
+                        foreach($sql->result() as $data){
                         $noUrut++
                 ?>
                     <tr>
                         <td class="text-center"><?= $noUrut?>.</td>
-                        <td class="text-center"><?= $data->nama_pegawai ?>.</td>
+                        <td class="text-center"><?= tgl_indonesia($data->tanggal_terjual) ?></td>
                         <td class="text-center"><?= $data->nama_product ?></td>
-                        <td class="text-center"><?= tgl_indo($data->tanggal) ?></td>
-                        <td class="text-center"><?= $data->stok ?></td>
-                        <td class="text-center">Rp. <?= buatRupiah($data->stok * $data->harga_jual) ?></td>
-                        <?php $total += ($data->stok * $data->harga_jual)?>
-                        <td class="text-center">
-                            <!-- <a class="btn btn-warning btn-sm edit_p" id="<?=$data->id_stok ?>">&nbsp;<i class="fa fa-pencil" ></i></a> -->
+                        <td class="text-center"><?= ($data->stok_terjual) ?></td>
+                        <td class="text-center">Rp. <?= buatRupiah($data->stok_terjual * $data->harga_jual) ?></td>
+                        <?php 
+                        $total += $data->stok_terjual * $data->harga_jual; ?>
+                        <!-- <td class="text-center">
+                            <a class="btn btn-warning btn-sm edit_p" id="<?=$data->id_stok ?>">&nbsp;<i class="fa fa-pencil" ></i></a>
                             <a class="btn btn-sm btn-danger hapusModal" id="hapusModal__<?=$data->id_stok ?>"  data-toggle="modal" data-target="#deleteModal">&nbsp;<i class="fa fa-trash"></i></a>
-						</td>
+						</td> -->
                     </tr>
 
                 <?php } ?>
             </tbody>
             <tfoot>
-                <td>Total Uang Awal :</td>
-                <td colspan="5">Rp <?= buatRupiah($total); ?></td>
+                <td>Total Semua</td>
+                <td colspan="4">Rp <?php echo buatRupiah($total) ?></td>
             </tfoot>
         </table>
 				</div>
@@ -215,7 +218,7 @@ $(document).ready(function(){
 //form input
 $(document).on('click', '.add_p', function(){
   $.ajax({
-   url:"<?= base_url('stok/add')?>",
+   url:"<?= base_url('laporan/add')?>",
    success:function(data){
     $('#form_add').html(data);
     $('#addModal').modal('show');
@@ -226,7 +229,7 @@ $(document).on('click', '.add_p', function(){
  $(document).on('click', '.edit_p', function(){
   var idnya = $(this).attr("id");
   $.ajax({
-   url:"<?= base_url('stok/edit')?>",
+   url:"<?= base_url('laporan/edit')?>",
    method:"POST",
    data:{idnya:idnya},
    success:function(data){

@@ -14,6 +14,8 @@ class Transaksi extends CI_Controller {
 		$this->load->model('Pegawai');
         $this->load->helper('security');
 
+		date_default_timezone_set('Asia/Makassar');
+
 		$idgue = $this->session->userdata('id_pegawai');
 		$dataku['dataku'] = $this->Pegawai->dataku($idgue);
 		
@@ -47,7 +49,7 @@ class Transaksi extends CI_Controller {
 			$this->load->view('main/transaksi/cart', $data);
 		}else{
 			$this->Transaksi_model->create_cart($_SESSION['id_pegawai']);
-			redirect('transaksi/cart');
+			redirect('jual');
 		}
 
 		$this->load->view('main/extend/footer');
@@ -62,7 +64,7 @@ class Transaksi extends CI_Controller {
 
 			if (empty($id_transaksi) || empty($id_product) || $qty <= 0) {
 				$this->session->set_flashdata('error', 'Data tidak lengkap atau jumlah tidak valid.');
-				redirect('transaksi/cart');
+				redirect('jual');
 				return;
 			}
 
@@ -74,10 +76,10 @@ class Transaksi extends CI_Controller {
 				$new_qty = $existing->qty + $qty;
 
 				// Cek stok produk
-				$cekStok = $this->db->get_where('tbl_product', array('id_product' => $id_product))->row();
+				$cekStok = $this->db->get_where('tbl_stok', array('id_product' => $id_product))->row();
 				if ($cekStok->stok < $new_qty) {
 					$this->session->set_flashdata('error', 'Stok tidak mencukupi.');
-					redirect('transaksi/cart');
+					redirect('jual');
 					return;
 				}
 
@@ -85,26 +87,26 @@ class Transaksi extends CI_Controller {
 				$this->db->where('id_cart', $existing->id_cart);
 				$this->db->update('tbl_cart');
 			} else {
-				$cekProduk = $this->db->get_where('tbl_product', array('id_product' => $id_product))->row();
+				$cekProduk = $this->db->get_where('tbl_stok', array('id_product' => $id_product))->row();
 				if ($cekProduk) {
 					// Validasi stok
 					if ($cekProduk->stok < $qty) {
 						$this->session->set_flashdata('error', 'Stok tidak mencukupi.');
-						redirect('transaksi/cart');
+						redirect('jual');
 						return;
 					}
 
 					$this->db->set('id_product', $cekProduk->id_product);
 					$this->db->set('id_transaksi', $id_transaksi);
-					$this->db->set('modal', $cekProduk->harga_beli);
-					$this->db->set('harga_satuan', $cekProduk->harga_jual);
+					//$this->db->set('modal', $cekProduk->harga_beli);
+					//$this->db->set('harga_satuan', $cekProduk->harga_jual);
 					$this->db->set('qty', $qty); // Set quantity
 					$this->db->insert('tbl_cart');
 
 					// Kurangi stok produk
 					$this->db->set('stok', 'stok - ' . $qty, FALSE);
 					$this->db->where('id_product', $cekProduk->id_product);
-					$this->db->update('tbl_product');
+					$this->db->update('tbl_stok');
 
 					$this->session->set_flashdata('success', 'Barang berhasil ditambahkan.');
 				} else {
@@ -112,7 +114,7 @@ class Transaksi extends CI_Controller {
 				}
 			}
 
-			redirect('transaksi/cart');
+			redirect('jual');
 		} else {
 			show_404(); // Menampilkan halaman 404 jika bukan metode POST
 		}
@@ -131,25 +133,25 @@ class Transaksi extends CI_Controller {
 			$qty_before = (int) $this->input->post('qty_before', true);
 			$qty = (int) $this->input->post('qty', true);
 
-			$ce = $this->db->select('stok')->get_where('tbl_product', array('id_product' => $id_product))->row_array();
+			$ce = $this->db->select('stok')->get_where('tbl_stok', array('id_product' => $id_product))->row_array();
 			if ($qty < 0 || $qty > ($ce['stok'] + $qty_before)) {
 				$errors[] = "Masukan jumlah yang sesuai, stok tersisa adalah " . ($ce['stok'] + $qty_before);
 			}
 
 			if (!empty($errors)) {
 				$this->session->set_flashdata('error', display_errors($errors));
-				redirect('transaksi/cart');
+				redirect('jual');
 			} else {
 				if ($qty > $qty_before && $qty != $qty_before) {
 					$jumlah = $qty - $qty_before;
-					$this->db->query("UPDATE tbl_product SET stok = stok - '$jumlah' WHERE id_product='$id_product'");
+					$this->db->query("UPDATE tbl_stok SET stok = stok - '$jumlah' WHERE id_product='$id_product'");
 					$this->db->query("UPDATE tbl_cart SET qty='$qty' WHERE id_cart='$id'");
 				} elseif ($qty < $qty_before && $qty != $qty_before) {
 					$jumlah = $qty_before - $qty;
-					$this->db->query("UPDATE tbl_product SET stok = stok + '$jumlah' WHERE id_product='$id_product'");
+					$this->db->query("UPDATE tbl_stok SET stok = stok + '$jumlah' WHERE id_product='$id_product'");
 					$this->db->query("UPDATE tbl_cart SET qty='$qty' WHERE id_cart='$id'");
 				}
-				redirect('transaksi/cart');
+				redirect('jual');
 			}
 		}
 	}
@@ -165,7 +167,7 @@ class Transaksi extends CI_Controller {
 
 			$this->db->set('stok', "stok + $qty", false);
 			$this->db->where('id_product', $id_product);
-			$this->db->update('tbl_product');
+			$this->db->update('tbl_stok');
 
 			if ($this->db->affected_rows() > 0) {
 				$this->db->query("DELETE FROM tbl_cart where id_cart = '$id'");
@@ -175,7 +177,7 @@ class Transaksi extends CI_Controller {
 			}
 		}
 
-		redirect('transaksi/cart');
+		redirect('jual');
 	}
 	public function cart_reset_produk($id)
 	{
@@ -188,7 +190,7 @@ class Transaksi extends CI_Controller {
 		{
 			$this->db->set('stok', "stok +  $p->qty", false);
 			$this->db->where('id_product', $p->id_product);
-			$this->db->update('tbl_product');
+			$this->db->update('tbl_stok');
 			if ($this->db->affected_rows() > 0) {
 				$this->db->query("DELETE FROM tbl_cart where id_cart = '$p->id_cart'");
 
@@ -197,7 +199,7 @@ class Transaksi extends CI_Controller {
 		}
 		$success[] = "Keranjang di kosongkan.";
 		$this->session->set_flashdata('error',  display_success($success));
-		redirect('transaksi/cart');
+		redirect('jual');
 		}
 	}
 	public function cart_save($id)

@@ -20,6 +20,14 @@ class Product_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_stok');
         $this->db->join('tbl_product', 'tbl_product.id_product = tbl_stok.id_product');
+        $this->db->join('tbl_pegawai', 'tbl_stok.id_pegawai = tbl_pegawai.id_pegawai');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_all_cabang() {
+        $this->db->select('*');
+        $this->db->where('is_admin', '0');
         $query = $this->db->get();
         return $query->result();
     }
@@ -56,6 +64,30 @@ class Product_model extends CI_Model {
         $this->db->where('id_stok', $del_id);
         $this->db->delete('tbl_stok');
         return true;
+    }
+
+    public function check_duplicate_stok($tanggal, $id_product) {
+        $this->db->where('tanggal', $tanggal);
+        $this->db->where('id_product', $id_product);
+        $query = $this->db->get('tbl_stok');
+
+        if ($query->num_rows() > 0) {
+            return true; // Data duplikat ditemukan
+        } else {
+            return false; // Tidak ada data duplikat
+        }
+    }
+
+    public function check_duplicate_laporan($tanggal, $id_product) {
+        $this->db->where('tanggal_terjual', $tanggal);
+        $this->db->where('id_product', $id_product);
+        $query = $this->db->get('tbl_penjualan');
+
+        if ($query->num_rows() > 0) {
+            return true; // Data duplikat ditemukan
+        } else {
+            return false; // Tidak ada data duplikat
+        }
     }
 
 	public function get_by_jenis($id) {
