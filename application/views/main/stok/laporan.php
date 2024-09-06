@@ -63,18 +63,17 @@ function tgl_indo($tanggal){
                 <tr>
                     <th class="text-center">No.</th>
                     <th class="text-center">Tanggal Penjualan</th>
-                    <th class="text-center">Nama Product</th>
-                    <th class="text-center">Stok Terjual</th>
-                    <th class="text-center">Total Penjualan</th>
-                    <!-- <th class="text-center">Opsi</th> -->
+                    <th class="text-center">Cabang</th>
+                    <th class="text-center">Opsi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
                         $noUrut = 0;
-                        $total = 0;
+                       
 					    $sql = $this->db->query("SELECT * FROM tbl_penjualan
-                        LEFT JOIN tbl_product ON tbl_product.id_product = tbl_penjualan.id_product
+                        JOIN tbl_pegawai ON tbl_pegawai.id_pegawai = tbl_penjualan.id_pegawai
+                        GROUP BY tanggal_terjual ORDER BY tanggal_terjual DESC
                         ");
 
                         foreach($sql->result() as $data){
@@ -83,23 +82,14 @@ function tgl_indo($tanggal){
                     <tr>
                         <td class="text-center"><?= $noUrut?>.</td>
                         <td class="text-center"><?= tgl_indonesia($data->tanggal_terjual) ?></td>
-                        <td class="text-center"><?= $data->nama_product ?></td>
-                        <td class="text-center"><?= ($data->stok_terjual) ?></td>
-                        <td class="text-center">Rp. <?= buatRupiah($data->stok_terjual * $data->harga_jual) ?></td>
-                        <?php 
-                        $total += $data->stok_terjual * $data->harga_jual; ?>
-                        <!-- <td class="text-center">
-                            <a class="btn btn-warning btn-sm edit_p" id="<?=$data->id_stok ?>">&nbsp;<i class="fa fa-pencil" ></i></a>
-                            <a class="btn btn-sm btn-danger hapusModal" id="hapusModal__<?=$data->id_stok ?>"  data-toggle="modal" data-target="#deleteModal">&nbsp;<i class="fa fa-trash"></i></a>
-						</td> -->
+                        <td class="text-center"><?= $data->nama_pegawai ?></td>
+                        <td class="text-center">
+                           
+						</td>
                     </tr>
 
                 <?php } ?>
             </tbody>
-            <tfoot>
-                <td>Total Semua</td>
-                <td colspan="4">Rp <?php echo buatRupiah($total) ?></td>
-            </tfoot>
         </table>
 				</div>
 			</div>

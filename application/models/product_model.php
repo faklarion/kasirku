@@ -19,8 +19,20 @@ class Product_model extends CI_Model {
     public function get_all_stok() {
         $this->db->select('*');
         $this->db->from('tbl_stok');
+        $this->db->join('tbl_pegawai', 'tbl_stok.id_pegawai = tbl_pegawai.id_pegawai');
+        $this->db->group_by('tbl_stok.tanggal');
+        $this->db->order_by('tbl_stok.tanggal', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_all_stok_by_cabang($id, $tanggal) {
+        $this->db->select('*');
+        $this->db->from('tbl_stok');
         $this->db->join('tbl_product', 'tbl_product.id_product = tbl_stok.id_product');
         $this->db->join('tbl_pegawai', 'tbl_stok.id_pegawai = tbl_pegawai.id_pegawai');
+        $this->db->where('tbl_stok.id_pegawai', $id);
+        $this->db->where('tbl_stok.tanggal', $tanggal);
         $query = $this->db->get();
         return $query->result();
     }

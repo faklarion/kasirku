@@ -77,19 +77,19 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="main.css">
-        <title>Keranjang</title>
+        <title>Transaksi</title>
     </head>
 
     <body>
         <div class="app-title">
             <div class="row">
                 <a href="<?= base_url('transaksi') ?>" class="btn btn-default"><i class="fa fa-chevron-left"></i></a>
-                <h1><i class="fa fa-cart-plus"></i> Keranjang</h1>
+                <h1><i class="fa fa-cart-plus"></i> Transaksi</h1>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
                 <li class="breadcrumb-item"><a href="<?= base_url() ?>transaksi">Transaksi</a></li>
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Keranjang</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Lakukan Transaksi</a></li>
             </ul>
         </div>
         <div class="tile">
@@ -110,18 +110,14 @@
             <div class="col-md-12">
                 <div class="product-gallery">
                     <?php
-                    $lists = $this->db->query("SELECT * FROM tbl_stok
-                    JOIN tbl_product ON tbl_product.id_product = tbl_stok.id_product
-                    WHERE stok > 0
-                    AND tanggal = CURRENT_DATE");
+                    $lists = $this->db->query("SELECT * FROM tbl_product ORDER BY nama_product ASC");
                     $products = $lists->result();
                     foreach ($products as $product) { ?>
                         <div class="product-card">
                             <img src="<?= base_url('assets/images/products/' . $product->foto) ?>"
                                 alt="<?= $product->nama_product ?>" class="card-img">
                             <div class="card-body">
-                                <h3 class="product-name"><?= $product->nama_product ?></h3>
-                                <small>Stok : <?= $product->stok ?></small>
+                                <h2 class="product-name"><?= $product->nama_product ?></h2>
                                 <p class="product-price">Rp. <?= buatRupiah($product->harga_jual) ?></p>
                                 <form action="<?= base_url('transaksi/cart_add_produk/' . $da->id_transaksi) ?>" method="POST">
                                     <input type="hidden" name="id_transaksi" value="<?= $da->id_transaksi ?>">
@@ -140,7 +136,7 @@
                 <div class="table-responsive">
                     <table class="table" width="100%" border="1">
                         <tr style="background-color: gold;">
-                            <th> Keranjang Pesanan
+                            <th> Transaksi Pesanan
                             </th>
                         </tr>
                         <tr>
